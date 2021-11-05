@@ -1,5 +1,61 @@
 # -*- coding: utf-8 -*-
 
+#import numpy as np
+#import matplotlib.pyplot as plt
+import pandas as pd
+#import sklearn
+
+
+# read data 
+dataset = pd.read_csv('Social_Network_Ads.csv')
+X = dataset.iloc[:, [1, 2, 3]].values
+y = dataset.iloc[:, -1].values
+
+# get LableEncorder from dataset 
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+X[:,0] = le.fit_transform(X[:,0])
+
+# split dataset to train , test
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.21, random_state = 8)
+print('************************** Y_Train *************************')
+#print(X_train)
+print(y_train)
+print('************************** X_Test *************************')
+#print(X_test)
+print(y_test)
+
+#scaling to the training and test set of independent variables for reducing the size to smaller values
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+#create and train the K Nearest Neighbor model with the training set
+from sklearn.neighbors import KNeighborsClassifier
+classifier = KNeighborsClassifier(n_neighbors = 3, metric = 'minkowski', p = 2)
+classifier.fit(X_train, y_train)
+
+"""
+print((len(X)/len(X_train))*100)
+print(len(y)/len(y_train))
+print(len(X)/len(X_test))
+print(len(y)/len(y_test))
+"""
+
+y_pred = classifier.predict(X_test)
+
+#print(y_pred)
+from sklearn.metrics import confusion_matrix,accuracy_score
+cm = confusion_matrix(y_test, y_pred)
+ac = accuracy_score(y_test,y_pred)
+
+print(cm)
+print('Accuracy is ',ac*100)
+
+
+
 
 """
 from collections import Counter
@@ -62,62 +118,6 @@ if __name__ == "__main__":
     print("KNN classification accuracy", accuracy(y_test, predictions))
 
     """
-#import numpy as np
-#import matplotlib.pyplot as plt
-import pandas as pd
-#import sklearn
-
-
-# read data 
-dataset = pd.read_csv('Social_Network_Ads.csv')
-X = dataset.iloc[:, [1, 2, 3]].values
-y = dataset.iloc[:, -1].values
-
-# get LableEncorder from dataset 
-from sklearn.preprocessing import LabelEncoder
-le = LabelEncoder()
-X[:,0] = le.fit_transform(X[:,0])
-
-# split dataset to train , test
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.21, random_state = 8)
-print('************************** Y_Train *************************')
-#print(X_train)
-print(y_train)
-print('************************** X_Test *************************')
-#print(X_test)
-print(y_test)
-
-#scaling to the training and test set of independent variables for reducing the size to smaller values
-from sklearn.preprocessing import StandardScaler
-sc = StandardScaler()
-X_train = sc.fit_transform(X_train)
-X_test = sc.transform(X_test)
-
-#create and train the K Nearest Neighbor model with the training set
-from sklearn.neighbors import KNeighborsClassifier
-classifier = KNeighborsClassifier(n_neighbors = 3, metric = 'minkowski', p = 2)
-classifier.fit(X_train, y_train)
-
-"""
-print((len(X)/len(X_train))*100)
-print(len(y)/len(y_train))
-print(len(X)/len(X_test))
-print(len(y)/len(y_test))
-"""
-
-y_pred = classifier.predict(X_test)
-
-#print(y_pred)
-from sklearn.metrics import confusion_matrix,accuracy_score
-cm = confusion_matrix(y_test, y_pred)
-ac = accuracy_score(y_test,y_pred)
-
-print(cm)
-print('Accuracy is ',ac*100)
-
-
-
 
 
 
